@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Sistema de gestión y catálogo interactivo de la Biblioteca Escolar Saber Digital.">
+  <title>Biblioteca Interactiva - Saber Digital</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg py-3" aria-label="Navegación Principal">
+  <div class="container">
+    <a class="navbar-brand" href="#" aria-label="Biblioteca Saber Digital Inicio">
+      <span class="fs-4">📚</span> Biblioteca Saber Digital
+    </a>
+    
+    <div class="theme-switch-wrapper">
+      <span id="theme-label" class="small text-muted">Modo Claro</span>
+      <label class="theme-switch" for="checkbox">
+        <input type="checkbox" id="checkbox" aria-labelledby="theme-label">
+        <div class="slider round"></div>
+      </label>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="stat-card">
+        <div class="stat-icon">📖</div>
+        <div>
+          <div class="stat-number" id="count-total">0</div>
+          <div class="stat-label">Total de Libros</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="stat-card">
+        <div class="stat-icon">🔄</div>
+        <div>
+          <div class="stat-number" id="count-prestados">0</div>
+          <div class="stat-label">Libros Prestados</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div>
+          <div class="stat-number" id="count-disponibles">0</div>
+          <div class="stat-label">Libros Disponibles</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-4">
+      <div class="card p-3 mb-4">
+        <h4 class="mb-3">Búsqueda y Filtros</h4>
+        <div class="mb-3">
+          <label for="search-input" class="form-label">Buscar Libro</label>
+          <input type="text" class="form-control" id="search-input" placeholder="Buscar por título o autor..." aria-label="Buscar libro">
+        </div>
+        <div class="mb-3">
+          <label for="disponibilidad" class="form-label">Disponibilidad</label>
+          <select class="form-select" id="disponibilidad" aria-label="Filtrar por disponibilidad">
+            <option value="Todos">Todos</option>
+            <option value="Disponible">Disponible</option>
+            <option value="Prestado">Prestado</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="categoria-filter" class="form-label">Categoría</label>
+          <select class="form-select" id="categoria-filter" aria-label="Filtrar por categoría">
+            <option value="Todas">Todas</option>
+            <option value="Ficción">Ficción</option>
+            <option value="Ciencia">Ciencia</option>
+            <option value="Historia">Historia</option>
+            <option value="Literatura">Literatura</option>
+            <option value="Tecnología">Tecnología</option>
+          </select>
+        </div>
+        <div>
+          <label for="anio-filter" class="form-label">Año de publicación</label>
+          <input type="number" class="form-control" id="anio-filter" placeholder="Ej. 1605" aria-label="Filtrar por año de publicación">
+        </div>
+      </div>
+
+      <div class="card p-3 mb-4">
+        <h4 class="mb-3">Añadir Nuevo Libro</h4>
+        <form id="form-libro" aria-label="Formulario para agregar libro nuevo">
+          <div class="mb-2">
+            <label for="titulo" class="form-label small mb-1">Título</label>
+            <input type="text" class="form-control form-control-sm" id="titulo" required>
+          </div>
+          <div class="mb-2">
+            <label for="autor" class="form-label small mb-1">Autor</label>
+            <input type="text" class="form-control form-control-sm" id="autor" required>
+          </div>
+          <div class="mb-2">
+            <label for="categoria" class="form-label small mb-1">Categoría</label>
+            <select class="form-select form-select-sm" id="categoria" required>
+              <option value="Ficción">Ficción</option>
+              <option value="Ciencia">Ciencia</option>
+              <option value="Historia">Historia</option>
+              <option value="Literatura">Literatura</option>
+              <option value="Tecnología">Tecnología</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label for="anio" class="form-label small mb-1">Año de publicación</label>
+            <input type="number" class="form-control form-control-sm" id="anio" required>
+          </div>
+          <div class="mb-3">
+            <label for="estado" class="form-label small mb-1">Estado Inicial</label>
+            <select class="form-select form-select-sm" id="estado" required>
+              <option value="Disponible">Disponible</option>
+              <option value="Prestado">Prestado</option>
+            </select>
+          </div>
+          <div id="alert-error" class="alert alert-danger d-none py-2 px-3 small" role="alert"></div>
+          <button type="submit" class="btn btn-success w-100">Agregar al Catálogo</button>
+        </form>
+      </div>
+
+      <div class="card p-3 mb-4">
+        <h4 class="mb-2">Acciones Especiales</h4>
+        <button id="btn-reporte" class="btn btn-outline-success w-100">Generar Reporte de Lecturas</button>
+      </div>
+    </div>
+
+    <div class="col-lg-8">
+      <div class="card p-4 mb-4">
+        <h3 class="mb-4">Catálogo de Libros</h3>
+        <div class="row g-3" id="catalogo-grid">
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="card p-3">
+            <h4 class="mb-3">Estadísticas de Préstamos</h4>
+            <div class="chart-container">
+              <canvas id="grafico"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card p-3">
+            <h4 class="mb-3">Top Libros Más Leídos</h4>
+            <div id="reporte-container" class="list-group list-group-flush">
+              <div class="text-muted small py-3 text-center">Haz clic en el botón de acciones para generar el reporte.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalLibro" tabindex="-1" aria-labelledby="modalLibroTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-primary);">
+      <div class="modal-header" style="border-bottom: 1px solid var(--border-color);">
+        <h5 class="modal-title fw-bold" id="modalLibroTitle">Detalles del Libro</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" style="filter: var(--theme-close-btn);"></button>
+      </div>
+      <div class="modal-body" id="modalLibroBody">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
